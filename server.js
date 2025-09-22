@@ -8,16 +8,20 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Serve static files (dashboard.html) from backend root
-app.use(express.static(path.join(__dirname)));
+// Serve static files if needed (CSS, JS)
+app.use(express.static(path.join(__dirname, '..')));
 
-// MongoDB Atlas connection
+// 👇 MongoDB Atlas connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-})
-.then(() => console.log('✅ Connected to MongoDB Atlas'))
-.catch(err => console.error('MongoDB connection error:', err));
+});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('✅ Connected to MongoDB Atlas');
+});
 
 // Appointment schema
 const appointmentSchema = new mongoose.Schema({
@@ -31,20 +35,28 @@ const appointmentSchema = new mongoose.Schema({
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 
+// Routes
+
 // Test route
 app.get('/', (req, res) => {
   res.send('Backend is working!');
 });
 
-// Dashboard route
+// Serve doctor login page
+app.get('/doctor-login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+// Serve doctor dashboard page
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-// API routes
+// CRUD endpoints
 app.post('/appointments', async (req, res) => {
   try {
-    const newAppointment = new Appointment(req.body);
+    const { name, email, phone, service, message } = req.body;
+    const newAppointment = new Appointment({ name, email, phone, service, message });
     await newAppointment.save();
     res.status(201).json({ message: 'Appointment saved successfully!' });
   } catch (error) {
