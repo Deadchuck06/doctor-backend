@@ -4,19 +4,15 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 
-
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname, '..')));
+// Serve static files from backend root (where dashboard.html is)
+app.use(express.static(path.join(__dirname)));
 
-
-// 👇 MongoDB Atlas connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// MongoDB Atlas connection
+mongoose.connect(process.env.MONGO_URI);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -24,7 +20,7 @@ db.once('open', () => {
   console.log('✅ Connected to MongoDB Atlas');
 });
 
-// Remove prescription, priority, and status from schema
+// Appointment schema
 const appointmentSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -34,27 +30,22 @@ const appointmentSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-
 const Appointment = mongoose.model('Appointment', appointmentSchema);
-
 
 // Test route
 app.get('/', (req, res) => {
   res.send('Backend is working!');
 });
 
+// Dashboard route
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+// API routes
 app.post('/appointments', async (req, res) => {
   try {
-    const { name, email, phone, service, message } = req.body;
-
-    const newAppointment = new Appointment({
-      name,
-      email,
-      phone,
-      service,
-      message
-    });
-
+    const newAppointment = new Appointment(req.body);
     await newAppointment.save();
     res.status(201).json({ message: 'Appointment saved successfully!' });
   } catch (error) {
@@ -83,13 +74,8 @@ app.delete('/appointments/:id', async (req, res) => {
   }
 });
 
-// Remove status update endpoint since status is no longer in schema
-// If you want to keep the endpoint for future use, you can leave it, but it won't affect the data
-
-
 // Start server
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
