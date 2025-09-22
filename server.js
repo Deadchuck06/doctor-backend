@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Serve static files if needed (CSS, JS)
+// Serve static files (CSS, JS, images)
 app.use(express.static(path.join(__dirname, '..')));
 
 // 👇 MongoDB Atlas connection
@@ -34,8 +34,6 @@ const appointmentSchema = new mongoose.Schema({
 });
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);
-
-// Routes
 
 // Test route
 app.get('/', (req, res) => {
