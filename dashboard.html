@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Doctor Dashboard</title>
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <script>
+    if (localStorage.getItem('isDoctor') !== 'true') {
+      alert('Access denied. Please log in.');
+      window.location.href = 'login.html';
+    }
+  </script>
+
+  <h1>Appointments Dashboard</h1>
+  <label for="sort">Sort by:</label>
+  <select id="sort">
+    <option value="createdAt">Date</option>
+    <option value="name">Name</option>
+    <option value="service">Service</option>
+  </select>
+
+  <table id="appointmentsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Service</th>
+        <th>Message</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const isDoctor = localStorage.getItem('isDoctor') === 'true';
+
+    async function fetchAppointments(sortBy = 'createdAt') {
+      const res = await fetch('http://localhost:5000/appointments');
+      const data = await res.json();
+
+      data.sort((a, b) => {
+        if (sortBy === 'createdAt') return new Date(b.createdAt) - new Date(a.createdAt);
+        return a[sortBy].localeCompare(b[sortBy]);
+      });
+
+      const tbody = document.querySelector('#appointmentsTable tbody');
+      tbody.innerHTML = '';
+      data.forEach(app => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${app.name}</td>
+          <td>${app.email}</td>
+          <td>${app.phone}</td>
+          <td>${app.service}</td>
+          <td>${app.message}</td>
+          <td>${new Date(app.createdAt).toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    document.getElementById('sort').addEventListener('change', e => {
+      fetchAppointments(e.target.value);
+    });
+
+    fetchAppointments();
+  </script>
+</body>
+</html>
