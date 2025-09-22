@@ -33,37 +33,48 @@
         <th>Service</th>
         <th>Message</th>
         <th>Date</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
   <script>
-    const isDoctor = localStorage.getItem('isDoctor') === 'true';
+    const backendURL = 'https://doctor-backend-jspl.onrender.com';
 
     async function fetchAppointments(sortBy = 'createdAt') {
-      const res = await fetch('http://localhost:5000/appointments');
-      const data = await res.json();
+      try {
+        const res = await fetch(`${backendURL}/appointments`);
+        const data = await res.json();
 
-      data.sort((a, b) => {
-        if (sortBy === 'createdAt') return new Date(b.createdAt) - new Date(a.createdAt);
-        return a[sortBy].localeCompare(b[sortBy]);
-      });
+        data.sort((a, b) => {
+          if (sortBy === 'createdAt') return new Date(b.createdAt) - new Date(a.createdAt);
+          return a[sortBy].localeCompare(b[sortBy]);
+        });
 
-      const tbody = document.querySelector('#appointmentsTable tbody');
-      tbody.innerHTML = '';
-      data.forEach(app => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${app.name}</td>
-          <td>${app.email}</td>
-          <td>${app.phone}</td>
-          <td>${app.service}</td>
-          <td>${app.message}</td>
-          <td>${new Date(app.createdAt).toLocaleString()}</td>
-        `;
-        tbody.appendChild(row);
-      });
+        const tbody = document.querySelector('#appointmentsTable tbody');
+        tbody.innerHTML = '';
+        data.forEach(app => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${app.name}</td>
+            <td>${app.email}</td>
+            <td>${app.phone}</td>
+            <td>${app.service}</td>
+            <td>${app.message}</td>
+            <td>${new Date(app.createdAt).toLocaleString()}</td>
+            <td><button onclick="deleteAppointment('${app._id}')">Delete</button></td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (err) {
+        console.error('Error fetching appointments:', err);
+      }
+    }
+
+    async function deleteAppointment(id) {
+      await fetch(`${backendURL}/appointments/${id}`, { method: 'DELETE' });
+      fetchAppointments();
     }
 
     document.getElementById('sort').addEventListener('change', e => {
