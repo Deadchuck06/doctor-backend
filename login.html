@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Doctor Login | Indus Diabetes Centre</title>
+  <title>Doctor Login | Indus Diabetes and Obesity Centre</title>
   <style>
     body {
       font-family: "Poppins", sans-serif;
@@ -23,6 +23,21 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       width: 350px;
       text-align: center;
+    }
+
+    /* Clinic Heading */
+    .clinic-heading {
+      font-size: 22px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 8px;
+    }
+
+    .clinic-subtitle {
+      color: #1976d2;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 25px;
     }
 
     .login-container h2 {
@@ -68,7 +83,12 @@
 </head>
 <body>
   <div class="login-container">
+    <!-- Clinic Heading -->
+    <div class="clinic-heading">[INDUS]</div>
+    <div class="clinic-subtitle">Diabetes and Obesity Centre</div>
+
     <h2>Doctor Login</h2>
+
     <form id="loginForm">
       <input type="text" id="username" placeholder="Username" required />
       <input type="password" id="password" placeholder="Password" required />
