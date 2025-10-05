@@ -1,11 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Doctor Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Dashboard | Indus Diabetes & Obesity Centre</title>
   <style>
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f4f4f4; }
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f7f9fc;
+      color: #333;
+    }
+
+    /* Header */
+    header {
+      background: #1976d2;
+      color: #fff;
+      padding: 15px 40px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    header h1 {
+      font-size: 20px;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    /* Main container */
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+
+    .container h2 {
+      color: #1976d2;
+      font-size: 24px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    label {
+      font-weight: 500;
+      margin-right: 8px;
+    }
+
+    select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    select:focus {
+      border-color: #1976d2;
+      box-shadow: 0 0 4px rgba(25, 118, 210, 0.4);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 25px;
+      font-size: 15px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background-color: #e3f2fd;
+      color: #0d47a1;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: #f1faff;
+    }
+
+    button {
+      background: #1976d2;
+      border: none;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: #1565c0;
+    }
   </style>
 </head>
 <body>
@@ -16,28 +112,37 @@
     }
   </script>
 
-  <h1>Appointments Dashboard</h1>
-  <label for="sort">Sort by:</label>
-  <select id="sort">
-    <option value="createdAt">Date</option>
-    <option value="name">Name</option>
-    <option value="service">Service</option>
-  </select>
+  <!-- Header -->
+  <header>
+    <h1>[INDUS] Diabetes & Obesity Centre — Doctor Dashboard</h1>
+  </header>
 
-  <table id="appointmentsTable">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Service</th>
-        <th>Message</th>
-        <th>Date</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <!-- Dashboard Content -->
+  <div class="container">
+    <h2>Appointments Dashboard</h2>
+
+    <label for="sort">Sort by:</label>
+    <select id="sort">
+      <option value="createdAt">Date</option>
+      <option value="name">Name</option>
+      <option value="service">Service</option>
+    </select>
+
+    <table id="appointmentsTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Service</th>
+          <th>Message</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <script>
     const backendURL = 'https://doctor-backend-jspl.onrender.com';
